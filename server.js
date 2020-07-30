@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("Client/build"));
+  app.use(express.static("client/build"));
 }
 
 mongoose.connect(process.env.DB_URI || "mongodb://localhost/agendaDB", { useNewUrlParser: true });
@@ -19,7 +19,7 @@ require('./routes/api-routes')(app);
 
 if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "Client/build/index.html"), function(err){
+    res.sendFile(path.join(__dirname, "client/build/index.html"), function(err){
       if(err){
         res.status(500).send(err);
       }
