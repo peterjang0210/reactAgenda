@@ -5,17 +5,18 @@ import {
   Route
 } from "react-router-dom";
 import ListPage from "./components/listPage/ListPage";
+import { Container } from '@material-ui/core';
 
 function App() {
   return (
     <Router>
-      <div>
+      <Container>
         <Switch>
           <Route path="/">
             <ListPage />
           </Route>
         </Switch>
-      </div>
+      </Container>
     </Router>
   );
 }
