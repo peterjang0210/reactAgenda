@@ -113,7 +113,7 @@ module.exports = function (app) {
     Task.findByIdAndDelete(req.params.id)
       .then(function (deletedTask) {
         List.findById(deletedTask.list).then(function(list){
-            const updatedTaskIDs
+            const updatedTaskIDs = [];
             for(let i = 0; i < list.tasks.length; i++){
                 if(list.tasks[i]._id !== deletedTask._id){
                     updatedTaskIDs.push(list.tasks[i]._id);
