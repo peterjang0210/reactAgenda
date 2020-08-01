@@ -52,16 +52,29 @@ module.exports = function (app) {
 
   app.delete("/api/lists/:id", function (req, res) {
     List.findById(req.params.id).then(function (list) {
-      for (let i = 0; i < list.tasks.length; i++) {
-        Task.findByIdAndDelete(list.tasks[i]._id);
+      if (list.tasks.length > 0) {
+        for (let i = 0; i < list.tasks.length; i++) {
+          Task.findByIdAndDelete(list.tasks[i]).then(function (deletedTask) {
+            if (i === list.tasks.length - 1) {
+              List.findByIdAndDelete(list._id)
+                .then(function (deletedList) {
+                  res.json(deletedList);
+                })
+                .catch(function (err) {
+                  res.json({ error: err });
+                });
+            }
+          });
+        }
+      } else {
+        List.findByIdAndDelete(list._id)
+          .then(function (deletedList) {
+            res.json(deletedList);
+          })
+          .catch(function (err) {
+            res.json({ error: err });
+          });
       }
-      List.findByIdAndDelete(list._id)
-        .then(function (deletedList) {
-          res.json(deletedList);
-        })
-        .catch(function (err) {
-          res.json({ error: err });
-        });
     });
   });
 
@@ -92,7 +105,17 @@ module.exports = function (app) {
     const newTask = { name, completed, category, list };
     Task.create(newTask)
       .then(function (task) {
-        res.json(task);
+        List.findByIdAndUpdate(
+          task.list,
+          { $push: { tasks: task } },
+          { new: true }
+        )
+          .then(function (list) {
+            res.json(task);
+          })
+          .catch(function (err) {
+            res.json({ error: err });
+          });
       })
       .catch(function (err) {
         res.json({ error: err });
@@ -112,15 +135,15 @@ module.exports = function (app) {
   app.delete("/api/tasks/:id", function (req, res) {
     Task.findByIdAndDelete(req.params.id)
       .then(function (deletedTask) {
-        List.findById(deletedTask.list).then(function(list){
-            const updatedTaskIDs = [];
-            for(let i = 0; i < list.tasks.length; i++){
-                if(list.tasks[i]._id !== deletedTask._id){
-                    updatedTaskIDs.push(list.tasks[i]._id);
-                }
+        List.findById(deletedTask.list).then(function (list) {
+          const updatedTaskIDs = [];
+          for (let i = 0; i < list.tasks.length; i++) {
+            if (list.tasks[i]._id !== deletedTask._id) {
+              updatedTaskIDs.push(list.tasks[i]._id);
             }
-            List.findByIdAndUpdate(deletedTask.list, updatedTaskIDs);
-        })
+          }
+          List.findByIdAndUpdate(deletedTask.list, updatedTaskIDs);
+        });
         res.json(deletedTask);
       })
       .catch(function (err) {
