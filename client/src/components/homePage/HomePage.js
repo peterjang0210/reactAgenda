@@ -1,10 +1,9 @@
 import React from "react";
-import List from "./List";
-import Header from "./Header";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import axios from "axios";
+import ListCard from "./ListCard";
 
-class ListPage extends React.Component {
+class HomePage extends React.Component {
   state = {
     lists: [],
   };
@@ -25,19 +24,12 @@ class ListPage extends React.Component {
   render() {
     return (
       <Grid spacing={3}>
-        <Grid item>
-          <Paper>
-            <Header />
-          </Paper>
-        </Grid>
-        <Grid>
-          <Paper>
-            <List />
-          </Paper>
-        </Grid>
+          {this.state.lists && this.state.lists.map(listItem => (
+              <ListCard key={listItem._id} date={listItem.date}/>
+          ))}
       </Grid>
     );
   }
 }
 
-export default ListPage;
+export default HomePage;
