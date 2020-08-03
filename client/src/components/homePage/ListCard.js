@@ -9,7 +9,7 @@ const ListCard = props => (
                     {props.date}
                 </Typography>
             <CardActions>
-                <Button variant="contained" color="primary" value={props._id} onClick={props.openList}>Open</Button>
+                <Button color="primary" value={props._id} onClick={props.openList}>Open</Button>
             </CardActions>
             </CardContent>
         </Card>

@@ -1,12 +1,13 @@
 import React from "react";
 import List from "./List";
 import Header from "./Header";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, Table, TableContainer, TableHead, TableRow, TableCell} from "@material-ui/core";
 import axios from "axios";
 
 class ListPage extends React.Component {
   state = {
-    lists: [],
+    list: {},
+    tasks: []
   };
 
   componentDidMount() {
@@ -14,28 +15,28 @@ class ListPage extends React.Component {
   }
 
   getList() {
+    const listID = window.location.pathname.substring(7);
     axios({
       method: "GET",
-      url: "/api/lists",
-    }).then((lists) => {
-      this.setState({ lists: lists.data });
+      url: `/api/lists/${listID}`,
+    }).then((list) => {
+      this.setState({ list: list.data, tasks: list.data.tasks });
     });
   }
 
   render() {
     return (
-      <Grid spacing={3}>
-        <Grid item>
-          <Paper>
-            <Header />
-          </Paper>
-        </Grid>
-        <Grid>
-          <Paper>
-            <List />
-          </Paper>
-        </Grid>
-      </Grid>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Tasks</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <List tasks={this.state.tasks}/>
+        </Table>
+      </TableContainer>
     );
   }
 }

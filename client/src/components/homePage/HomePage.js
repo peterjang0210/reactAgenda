@@ -9,10 +9,10 @@ class HomePage extends React.Component {
   };
 
   componentDidMount() {
-    this.getList();
+    this.getLists();
   }
 
-  getList() {
+  getLists() {
     axios({
       method: "GET",
       url: "/api/lists",
