@@ -21,11 +21,18 @@ class HomePage extends React.Component {
     });
   }
 
+  openList(event) {
+    event.preventDefault();
+    const listID = event.currentTarget.value;
+    window.location.href = `/lists/${listID}`;
+  }
+
   render() {
     return (
-      <Grid spacing={3}>
-          {this.state.lists && this.state.lists.map(listItem => (
-              <ListCard key={listItem._id} date={listItem.date}/>
+      <Grid container spacing={3}>
+        {this.state.lists &&
+          this.state.lists.map((listItem) => (
+            <ListCard key={listItem._id} {...listItem} openList={this.openList}/>
           ))}
       </Grid>
     );

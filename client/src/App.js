@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Container>
         <Switch>
-          <Route path="/list/:id">
+          <Route path="/lists/:id">
             <ListPage />
           </Route>
           <Route path="/">
