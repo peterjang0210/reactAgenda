@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ListPage from "./components/listPage/ListPage";
 import { Container } from "@material-ui/core";
