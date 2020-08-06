@@ -5,12 +5,15 @@ import ListCard from "./ListCard";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import CreateListDialog from "./CreateListDialog";
 
 class HomePage extends React.Component {
   state = {
     lists: [],
     calendarList: [],
-    listID: ""
+    listID: "",
+    open: false,
+    currentDate: ""
   };
 
   componentDidMount() {
@@ -39,10 +42,10 @@ class HomePage extends React.Component {
             date = `20${reversedDate[0]}-0${reversedDate[2]}-0${reversedDate[1]}`;
           }
         }
-        for(let j = 0; j < lists.data[i].tasks.length; j++){
+        for (let j = 0; j < lists.data[i].tasks.length; j++) {
           const event = {
             title: lists.data[i].tasks[j].name,
-            date: date
+            date: date,
           };
           calendarList.push(event);
         }
@@ -53,15 +56,19 @@ class HomePage extends React.Component {
 
   handleDateClick = (arg) => {
     const reversedDate = arg.dateStr.split("-").reverse();
-    const date = `${reversedDate[1].substring(1)}/${reversedDate[0].substring(1)}/${reversedDate[2].substring(2)}`;
-    for(let i = 0; i < this.state.lists.length; i++){
-      if(this.state.lists[i].date === date){
-        this.setState({listID: this.state.lists[i]._id});
-        if(this.state.listID){
+    const date = `${reversedDate[1].substring(1)}/${reversedDate[0].substring(
+      1
+    )}/${reversedDate[2].substring(2)}`;
+    for (let i = 0; i < this.state.lists.length; i++) {
+      if (this.state.lists[i].date === date) {
+        this.setState({ listID: this.state.lists[i]._id });
+        if (this.state.listID) {
           this.openList();
         }
       } else {
-        this.createList();
+        if(i === this.state.lists.length - 1){
+          this.handleClickOpen(date);
+        }
       }
     }
   };
@@ -71,8 +78,25 @@ class HomePage extends React.Component {
     window.location.href = `/lists/${listID}`;
   }
 
-  createList(){
-    console.log("create list");
+  handleClickOpen = (date) => {
+    this.setState({ open: true, currentDate: date });
+  };
+
+  handleClose = (event) => {
+    this.setState({ open: false });
+  };
+
+  createList = (event) => {
+    axios({
+      method: "POST",
+      url: "/api/lists",
+      data: {
+        date: this.state.currentDate
+      }
+    }).then(newList => {
+      this.setState({open: false, listID: newList.data._id});
+      this.openList();
+    })
   }
 
   render() {
@@ -81,21 +105,31 @@ class HomePage extends React.Component {
         <Grid item xs={12}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
-            initialView ="dayGridDay"
-            titleFormat={{weekday: "short", month: "numeric", day: "numeric", omitCommas: true}}
+            initialView="dayGridDay"
+            titleFormat={{
+              weekday: "short",
+              month: "numeric",
+              day: "numeric",
+              omitCommas: true,
+            }}
             events={this.state.calendarList}
             eventColor="#378006"
             dateClick={this.handleDateClick}
           />
         </Grid>
-        {this.state.lists &&
+        <CreateListDialog
+          open={this.state.open}
+          handleClose={this.handleClose}
+          createList={this.createList}
+        />
+        {/* {this.state.lists &&
           this.state.lists.map((listItem) => (
             <ListCard
               key={listItem._id}
               {...listItem}
               openList={this.openList}
             />
-          ))}
+          ))} */}
       </Grid>
     );
   }
