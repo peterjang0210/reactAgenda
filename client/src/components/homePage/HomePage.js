@@ -39,12 +39,13 @@ class HomePage extends React.Component {
             date = `20${reversedDate[0]}-0${reversedDate[2]}-0${reversedDate[1]}`;
           }
         }
-        const event = {
-          title: lists.data[i].date,
-          date: date,
-          extendedProps: lists.data[i]._id,
-        };
-        calendarList.push(event);
+        for(let j = 0; j < lists.data[i].tasks.length; j++){
+          const event = {
+            title: lists.data[i].tasks[j].name,
+            date: date
+          };
+          calendarList.push(event);
+        }
       }
       this.setState({ lists: lists.data, calendarList: calendarList });
     });
@@ -80,8 +81,10 @@ class HomePage extends React.Component {
         <Grid item xs={12}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridWeek"
+            initialView ="dayGridDay"
+            titleFormat={{weekday: "short", month: "numeric", day: "numeric", omitCommas: true}}
             events={this.state.calendarList}
+            eventColor="#378006"
             dateClick={this.handleDateClick}
           />
         </Grid>

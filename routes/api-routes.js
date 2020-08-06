@@ -5,6 +5,7 @@ module.exports = function (app) {
   // Routes for Lists
   app.get("/api/lists", function (req, res) {
     List.find()
+      .populate("tasks")
       .then(function (lists) {
         res.json(lists);
       })
