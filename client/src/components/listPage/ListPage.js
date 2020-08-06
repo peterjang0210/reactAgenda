@@ -2,12 +2,11 @@ import React from "react";
 import List from "./List";
 import Header from "./Header";
 import {
-  Paper,
   Table,
-  TableContainer,
   TableHead,
   TableRow,
   TableCell,
+  Container,
 } from "@material-ui/core";
 import axios from "axios";
 
@@ -105,7 +104,10 @@ class ListPage extends React.Component {
 
   render() {
     return (
-      <TableContainer component={Paper}>
+      <Container>
+        <header>
+          <Header />
+        </header>
         <Table>
           <TableHead>
             <TableRow>
@@ -130,7 +132,7 @@ class ListPage extends React.Component {
             editTask={this.editTask}
           />
         </Table>
-      </TableContainer>
+      </Container>
     );
   }
 }
