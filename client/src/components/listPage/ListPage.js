@@ -19,6 +19,8 @@ class ListPage extends React.Component {
     name: "",
     category: "",
     redAlert: false,
+    edit: false,
+    editName: "",
   };
 
   componentDidMount() {
@@ -31,6 +33,24 @@ class ListPage extends React.Component {
 
   toggleRedAlert = () => {
     this.setState({ redAlert: !this.state.redAlert });
+  };
+
+  changeToEdit = (event) => {
+    this.setState({ edit: true });
+  };
+
+  editTask = (event) => {
+    const taskID = event.currentTarget.value;
+    axios({
+      method: "PUT",
+      url: `/api/tasks/${taskID}`,
+      data: {
+        name: this.state.editName,
+      },
+    }).then((updatedTask) => {
+      this.setState({ edit: false, editName: "" });
+      this.getList();
+    });
   };
 
   getList() {
@@ -104,6 +124,10 @@ class ListPage extends React.Component {
             name={this.state.name}
             category={this.state.category}
             addTask={this.addTask}
+            changeToEdit={this.changeToEdit}
+            editName={this.state.editName}
+            edit={this.state.edit}
+            editTask={this.editTask}
           />
         </Table>
       </TableContainer>
