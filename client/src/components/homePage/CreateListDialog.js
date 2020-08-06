@@ -14,7 +14,7 @@ const CreateListModal = (props) => (
     onClose={props.handleClose}
   >
     <DialogTitle id="alert-dialog-title">
-      {"Create new to-do list for this date?"}
+      {"Create new to-do list?"}
     </DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
@@ -23,10 +23,10 @@ const CreateListModal = (props) => (
     </DialogContent>
     <DialogActions>
       <Button onClick={props.handleClose} color="primary">
-        Disagree
+        No
       </Button>
       <Button onClick={props.createList} color="primary" autoFocus>
-        Agree
+        Yes
       </Button>
     </DialogActions>
   </Dialog>

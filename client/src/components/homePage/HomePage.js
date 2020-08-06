@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import axios from "axios";
-import ListCard from "./ListCard";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -107,7 +106,6 @@ class HomePage extends React.Component {
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridDay"
             titleFormat={{
-              weekday: "short",
               month: "numeric",
               day: "numeric",
               omitCommas: true,
@@ -122,14 +120,6 @@ class HomePage extends React.Component {
           handleClose={this.handleClose}
           createList={this.createList}
         />
-        {/* {this.state.lists &&
-          this.state.lists.map((listItem) => (
-            <ListCard
-              key={listItem._id}
-              {...listItem}
-              openList={this.openList}
-            />
-          ))} */}
       </Grid>
     );
   }
